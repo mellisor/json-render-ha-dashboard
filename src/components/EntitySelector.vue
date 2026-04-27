@@ -47,7 +47,7 @@
     <div class="domain-list">
       <div v-for="(items, domain) in filteredGroupedEntities" :key="domain" class="domain-group">
         <div class="domain-header" @click="toggleDomain(domain)">
-          <label class="domain-label">
+          <label class="domain-label" @click.stop>
             <input
               type="checkbox"
               :checked="isDomainFullySelected(domain)"

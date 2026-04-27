@@ -2,7 +2,7 @@ import { defineCatalog } from '@json-render/core';
 import { schema } from '@json-render/vue/schema';
 import { z } from 'zod';
 
-const entityIdProp = z.object({ entityId: z.string() });
+const entityIdProp = z.object({ entityId: z.string(), label: z.string().optional() });
 
 export const catalog = defineCatalog(schema, {
   components: {
@@ -37,6 +37,7 @@ export const catalog = defineCatalog(schema, {
     ChartCard: {
       props: z.object({
         entityId: z.string(),
+        label: z.string().optional(),
         chartType: z.enum(['line', 'bar', 'gauge']).optional(),
         hours: z.number().optional(),
         aggregatePeriod: z.enum(['raw', '5min', '30min', '1h', '6h', '1d']).optional(),

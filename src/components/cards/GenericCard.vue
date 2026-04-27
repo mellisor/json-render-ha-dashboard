@@ -10,13 +10,13 @@
 import { inject, computed } from 'vue';
 import { formatRelativeTime } from '../../utils/format.js';
 
-const props = defineProps({ entityId: { type: String, required: true } });
+const props = defineProps({ entityId: { type: String, required: true }, label: { type: String, default: null } });
 const ha = inject('ha');
 
 const entity = computed(() => ha.entities.value[props.entityId]);
 const state = computed(() => entity.value?.state ?? 'unavailable');
 const attrs = computed(() => entity.value?.attributes ?? {});
-const name = computed(() => attrs.value.friendly_name || props.entityId);
+const name = computed(() => props.label || attrs.value.friendly_name || props.entityId);
 const isUnavailable = computed(() => state.value === 'unavailable');
 const unit = computed(() => attrs.value.unit_of_measurement ?? '');
 const displayState = computed(() => unit.value ? `${state.value} ${unit.value}` : state.value);

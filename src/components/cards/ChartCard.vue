@@ -78,6 +78,7 @@ const PERIOD_LABEL_TO_MS = {
 
 const props = defineProps({
   entityId:        { type: String, required: true },
+  label:           { type: String, default: null },
   chartType:       { type: String, default: 'line' },
   hours:           { type: Number, default: 24 },
   aggregatePeriod: { type: String, default: null },
@@ -120,7 +121,7 @@ const hasError  = ref(false);
 
 const entity = computed(() => ha.entities.value[props.entityId]);
 const attrs  = computed(() => entity.value?.attributes ?? {});
-const name   = computed(() => attrs.value.friendly_name || props.entityId);
+const name   = computed(() => props.label || attrs.value.friendly_name || props.entityId);
 const unit   = computed(() => attrs.value.unit_of_measurement ?? '');
 
 // Raw [ms, value] pairs from HA minimal history format

@@ -16,13 +16,14 @@ const { registry } = defineRegistry(catalog, {
     DashboardSection: ({ props, children }) =>
       h(DashboardSection, { title: props.title, icon: props.icon }, { default: () => children }),
     DashboardGrid: ({ children }) => h(DashboardGrid, null, { default: () => children }),
-    SensorCard: ({ props }) => h(SensorCard, { entityId: props.entityId }),
-    ToggleCard: ({ props }) => h(ToggleCard, { entityId: props.entityId }),
-    BinaryCard: ({ props }) => h(BinaryCard, { entityId: props.entityId }),
-    GenericCard: ({ props }) => h(GenericCard, { entityId: props.entityId }),
+    SensorCard: ({ props }) => h(SensorCard, { entityId: props.entityId, label: props.label }),
+    ToggleCard: ({ props }) => h(ToggleCard, { entityId: props.entityId, label: props.label }),
+    BinaryCard: ({ props }) => h(BinaryCard, { entityId: props.entityId, label: props.label }),
+    GenericCard: ({ props }) => h(GenericCard, { entityId: props.entityId, label: props.label }),
     ChartCard: ({ props }) =>
       h(ChartCard, {
         entityId: props.entityId,
+        label: props.label,
         chartType: props.chartType,
         hours: props.hours,
         aggregatePeriod: props.aggregatePeriod,
