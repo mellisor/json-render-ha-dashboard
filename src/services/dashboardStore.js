@@ -39,10 +39,16 @@ export async function getDashboard(id) {
 export async function saveDashboard({ id, name, spec, entityIds }) {
   const db  = await openDB();
   const now = new Date().toISOString();
+  const record = {
+    name,
+    spec:      JSON.parse(JSON.stringify(spec)),
+    entityIds: JSON.parse(JSON.stringify(entityIds)),
+    updatedAt: now,
+  };
   if (id) {
-    return tx(db, 'readwrite', s => s.put({ id: Number(id), name, spec, entityIds, updatedAt: now }));
+    return tx(db, 'readwrite', s => s.put({ ...record, id: Number(id) }));
   }
-  return tx(db, 'readwrite', s => s.add({ name, spec, entityIds, createdAt: now, updatedAt: now }));
+  return tx(db, 'readwrite', s => s.add({ ...record, createdAt: now }));
 }
 
 export async function deleteDashboard(id) {

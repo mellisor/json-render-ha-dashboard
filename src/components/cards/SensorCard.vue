@@ -2,8 +2,8 @@
   <div class="card sensor-card" :class="{ unavailable: state === 'unavailable' }">
     <div class="card-header">
       <span class="device-class-icon">{{ deviceIcon }}</span>
-      <span class="entity-name">{{ name }}</span>
     </div>
+    <div class="entity-name">{{ name }}</div>
     <div class="card-value">
       <span class="value">{{ displayValue }}</span>
       <span v-if="unit" class="unit">{{ unit }}</span>
@@ -81,13 +81,10 @@ const deviceIcon = computed(() => {
 .card-header {
   display: flex;
   align-items: center;
-  gap: 6px;
-  overflow: hidden;
 }
 
 .device-class-icon {
   font-size: 16px;
-  flex-shrink: 0;
 }
 
 .entity-name {

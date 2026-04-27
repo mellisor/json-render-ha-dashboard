@@ -2,7 +2,10 @@
   <div class="chart-card" :class="{ loading: isLoading, error: hasError }">
     <div class="chart-header">
       <span class="chart-title">{{ name }}</span>
-      <div class="chart-controls">
+    </div>
+    <div class="chart-controls">
+      <div class="control-labeled">
+        <span class="control-label">Aggregation</span>
         <div class="control-group">
           <button
             v-for="opt in availablePeriods"
@@ -12,6 +15,9 @@
             @click="localPeriodMs = opt.ms"
           >{{ opt.label }}</button>
         </div>
+      </div>
+      <div class="control-labeled">
+        <span class="control-label">Time Range</span>
         <div class="control-group">
           <button
             v-for="h in HOUR_OPTIONS"
@@ -279,9 +285,6 @@ watch(localHours, load);
 .chart-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  flex-wrap: wrap;
 }
 
 .chart-title {
@@ -290,14 +293,26 @@ watch(localHours, load);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  flex: 1;
-  min-width: 0;
 }
 
 .chart-controls {
   display: flex;
-  gap: 6px;
+  gap: 10px;
   flex-shrink: 0;
+}
+
+.control-labeled {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.control-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding-left: 2px;
 }
 
 .control-group {
