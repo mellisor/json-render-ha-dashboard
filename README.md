@@ -6,8 +6,9 @@ An AI-generated Home Assistant dashboard built with Vue 3 and [json-render](http
 
 1. Connect to your Home Assistant instance with a long-lived access token
 2. Select which entities to include and optionally write custom instructions
-3. Claude generates a dashboard layout as a streaming JSON spec, rendered progressively
-4. Refine the existing dashboard or regenerate from scratch at any time
+3. Claude generates a dashboard layout as a streaming JSON spec, rendered progressively as it arrives
+4. Refine the existing dashboard or regenerate from scratch at any time — the live dashboard stays visible while the new spec streams in
+5. Save dashboards to IndexedDB and load them back from the home screen
 
 Entity states are kept live via the Home Assistant WebSocket API. Chart cards fetch historical data from the same connection using `history/history_during_period`.
 
@@ -59,9 +60,16 @@ Open [http://localhost:5173](http://localhost:5173), enter your Home Assistant U
 
 ### ChartCard options
 
-- **Chart type** — `line` (default), `bar`, `gauge`
-- **Time range** — 1h, 6h, 24h, 72h
-- **Aggregation** — Raw, 5m, 30m, 1h, 6h, 1d (auto-selected based on range; adjustable in the card header)
+All options are adjustable interactively in the card header and can also be set by Claude at generation time.
+
+| Option | Values | Default |
+|--------|--------|---------|
+| Chart type | `line`, `bar`, `gauge` | `line` |
+| Time range | 1h, 6h, 24h, 72h | 24h |
+| Aggregation period | Raw, 5m, 30m, 1h, 6h, 1d | auto (based on range) |
+| Aggregation method | Avg, Min, Max | Avg |
+
+The **Method** control (Avg / Min / Max) only appears when a bucket period is active — it has no effect on raw data. Claude selects the method based on the metric: `max` for power peaks, `min` for temperature lows, `avg` otherwise.
 
 ## Architecture
 
@@ -84,15 +92,21 @@ src/
 ├── dashboard/
 │   ├── catalog.js                 # json-render component catalog (Zod schemas)
 │   ├── registry.js                # Maps catalog entries to Vue SFCs
-│   └── promptBuilder.js           # Builds the generation prompt from entity list + history
+│   ├── promptBuilder.js           # Builds the generation prompt from entity list + history
+│   └── specBuilder.js             # Builds a default spec without Claude (fallback)
+├── services/
+│   └── dashboardStore.js          # IndexedDB persistence (save, load, delete dashboards)
 ├── components/
 │   ├── ConnectionForm.vue
 │   ├── EntitySelector.vue         # Entity picker with search, domain grouping, refine/scratch toggle
 │   └── cards/
 │       ├── SensorCard.vue
-│       ├── ChartCard.vue          # ECharts with aggregation
+│       ├── ChartCard.vue          # ECharts with period aggregation and min/avg/max method
 │       ├── ToggleCard.vue
 │       ├── BinaryCard.vue
 │       └── GenericCard.vue
+├── views/
+│   ├── DashboardView.vue          # Dashboard shell, streaming toast, save dialog
+│   └── HomeView.vue               # Saved dashboard list
 └── utils/format.js
 ```
