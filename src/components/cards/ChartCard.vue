@@ -279,7 +279,7 @@ watch(localHours, load);
   display: flex;
   flex-direction: column;
   gap: 10px;
-  grid-column: span 2;
+  grid-column: span 3;
 }
 
 .chart-header {
@@ -343,10 +343,10 @@ watch(localHours, load);
   background: rgba(31, 111, 235, 0.2);
 }
 
-.chart { height: 180px; }
+.chart { height: 260px; }
 
 .chart-placeholder {
-  height: 180px;
+  height: 260px;
   display: flex;
   align-items: center;
   justify-content: center;
