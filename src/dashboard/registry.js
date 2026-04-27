@@ -27,6 +27,7 @@ const { registry } = defineRegistry(catalog, {
         chartType: props.chartType,
         hours: props.hours,
         aggregatePeriod: props.aggregatePeriod,
+        aggregateType: props.aggregateType,
       }),
   },
 });

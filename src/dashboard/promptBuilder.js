@@ -70,10 +70,12 @@ export function buildGenerationPrompt(selectedEntityIds, allEntities, userPrompt
     '  Use it to give cards clearer, friendlier names than the HA friendly_name.',
     '- For numeric sensors where historical trends are useful, use ChartCard instead of SensorCard.',
     '  ChartCard props: entityId (required), chartType ("line"|"bar"|"gauge"), hours (1|6|24|72),',
-    '  aggregatePeriod ("raw"|"5min"|"30min"|"1h"|"6h"|"1d").',
+    '  aggregatePeriod ("raw"|"5min"|"30min"|"1h"|"6h"|"1d"),',
+    '  aggregateType ("avg"|"min"|"max") — reduction applied per bucket, default "avg".',
     '  Use "gauge" for percentage or level sensors (battery, humidity, CO2, etc.).',
     '  Use "line" for continuously changing values (temperature, power, etc.).',
     '  Set aggregatePeriod based on hours: raw/5min for 1h, 30min for 6h, 1h for 24h, 6h for 72h.',
+    '  Set aggregateType based on the metric: "max" for power peaks, "min" for temperature lows, "avg" otherwise.',
     '- Do NOT invent entityId values — only use the ones listed above.',
     '- Avoid using sensors that do not have provided recent data unless otherwise specified'
   );

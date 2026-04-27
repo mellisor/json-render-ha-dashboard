@@ -41,8 +41,9 @@ export const catalog = defineCatalog(schema, {
         chartType: z.enum(['line', 'bar', 'gauge']).optional(),
         hours: z.number().optional(),
         aggregatePeriod: z.enum(['raw', '5min', '30min', '1h', '6h', '1d']).optional(),
+        aggregateType: z.enum(['avg', 'mean', 'min', 'max']).optional(),
       }),
-      description: 'Renders a historical time-series chart for a numeric sensor. chartType: "line" (default), "bar", or "gauge". hours: 1, 6, 24 (default), or 72. aggregatePeriod: raw/5min for 1h, 30min for 6h, 1h for 24h, 6h for 72h.',
+      description: 'Renders a historical time-series chart for a numeric sensor. chartType: "line" (default), "bar", or "gauge". hours: 1, 6, 24 (default), or 72. aggregatePeriod: raw/5min for 1h, 30min for 6h, 1h for 24h, 6h for 72h. aggregateType: "avg" (default), "min", or "max" — the reduction applied per bucket.',
     },
   },
 });

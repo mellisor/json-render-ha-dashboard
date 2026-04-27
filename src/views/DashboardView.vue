@@ -47,6 +47,12 @@
       </main>
     </template>
 
+    <!-- Streaming notification -->
+    <div v-if="isStreaming" class="stream-toast">
+      <div class="spinner" />
+      <span>Claude is designing your dashboard…</span>
+    </div>
+
     <!-- Save dialog -->
     <div v-if="showSaveDialog" class="dialog-overlay" @click.self="showSaveDialog = false">
       <div class="dialog">
@@ -190,6 +196,7 @@ async function handleGenerate({ entityIds, userPrompt, fromScratch }) {
   const prompt  = buildGenerationPrompt(entityIds, entities.value, userPrompt, historySummaries);
   const context = (!fromScratch && preRedesignSpec.value) ? { previousSpec: preRedesignSpec.value } : undefined;
   send(prompt, context);
+  isRedesigning.value = false;
 }
 
 function openSaveDialog() {
@@ -320,6 +327,36 @@ async function doSave() {
 .dash-main {
   padding: 24px;
 }
+
+/* Streaming toast */
+.stream-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: #0d1f33;
+  border: 1px solid var(--accent-dim);
+  border-radius: 8px;
+  color: var(--accent);
+  font-size: 14px;
+  z-index: 200;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(88, 166, 255, 0.3);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
 
 /* Save dialog */
 .dialog-overlay {

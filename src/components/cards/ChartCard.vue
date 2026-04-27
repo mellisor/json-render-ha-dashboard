@@ -16,6 +16,18 @@
           >{{ opt.label }}</button>
         </div>
       </div>
+      <div v-if="effectivePeriodMs > 0" class="control-labeled">
+        <span class="control-label">Method</span>
+        <div class="control-group">
+          <button
+            v-for="opt in AGG_TYPE_OPTIONS"
+            :key="opt.value"
+            class="ctrl-btn"
+            :class="{ active: localAggType === opt.value }"
+            @click="localAggType = opt.value"
+          >{{ opt.label }}</button>
+        </div>
+      </div>
       <div class="control-labeled">
         <span class="control-label">Time Range</span>
         <div class="control-group">
@@ -64,6 +76,12 @@ use([CanvasRenderer, LineChart, BarChart, GaugeChart, GridComponent, TooltipComp
 
 const HOUR_OPTIONS = [1, 6, 24, 72];
 
+const AGG_TYPE_OPTIONS = [
+  { label: 'Avg', value: 'avg' },
+  { label: 'Min', value: 'min' },
+  { label: 'Max', value: 'max' },
+];
+
 const PERIOD_OPTIONS = [
   { label: 'Raw',  ms: 0 },
   { label: '5m',   ms: 5 * 60 * 1000 },
@@ -88,12 +106,18 @@ const props = defineProps({
   chartType:       { type: String, default: 'line' },
   hours:           { type: Number, default: 24 },
   aggregatePeriod: { type: String, default: null },
+  aggregateType:   { type: String, default: 'avg' },
 });
 
 const ha = inject('ha');
 
 const localHours     = ref(props.hours);
-const localPeriodMs  = ref(null); // null = auto / follow prop
+const localPeriodMs  = ref(null);
+const localAggType   = ref(props.aggregateType === 'mean' ? 'avg' : (props.aggregateType ?? 'avg'));
+
+watch(() => props.aggregateType, (type) => {
+  localAggType.value = type === 'mean' ? 'avg' : (type ?? 'avg');
+});
 
 // Translate the aggregatePeriod prop string to ms once
 const propPeriodMs = computed(() =>
@@ -118,6 +142,8 @@ const effectivePeriodMs = computed(() =>
   localPeriodMs.value ?? propPeriodMs.value ?? autoPeriodMs.value,
 );
 
+watch(() => props.hours, (h) => { localHours.value = h; });
+
 // Reset manual period choice when hours changes (auto will re-derive)
 watch(localHours, () => { localPeriodMs.value = null; });
 
@@ -140,7 +166,12 @@ const rawData = computed(() => {
   return points;
 });
 
-// Bucket-average the raw data into the chosen period
+function reduceVals(vals) {
+  if (localAggType.value === 'min') return Math.min(...vals);
+  if (localAggType.value === 'max') return Math.max(...vals);
+  return vals.reduce((s, v) => s + v, 0) / vals.length; // avg / mean
+}
+
 const aggregatedData = computed(() => {
   const periodMs = effectivePeriodMs.value;
   if (periodMs === 0) return rawData.value;
@@ -153,7 +184,7 @@ const aggregatedData = computed(() => {
   }
   return Array.from(buckets.entries())
     .sort(([a], [b]) => a - b)
-    .map(([ts, vals]) => [ts + periodMs / 2, vals.reduce((s, v) => s + v, 0) / vals.length]);
+    .map(([ts, vals]) => [ts + periodMs / 2, reduceVals(vals)]);
 });
 
 const currentValue = computed(() =>
