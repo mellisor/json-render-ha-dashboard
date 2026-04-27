@@ -16,6 +16,7 @@
     "home-assistant-js-websocket": "latest",
     "vue": "^3.4.0",
     "vue-echarts": "^8.0.1",
+    "vue-router": "^5.0.6",
     "zod": "^4.0.0"
   },
   "devDependencies": {
