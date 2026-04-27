@@ -1,0 +1,25 @@
+{
+  "name": "ha-dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.91.1",
+    "@json-render/core": "latest",
+    "@json-render/vue": "latest",
+    "echarts": "^6.0.0",
+    "home-assistant-js-websocket": "latest",
+    "vue": "^3.4.0",
+    "vue-echarts": "^8.0.1",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.0",
+    "vite": "^5.0.0"
+  }
+}
